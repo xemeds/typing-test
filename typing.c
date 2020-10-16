@@ -2,8 +2,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <termios.h>
 
 #define NUMER_OF_TEXTS 3
 
@@ -15,21 +17,27 @@
 #define CLI_RED "\033[0;31m"
 #define CLI_BOLD_GREEN "\033[1;32m"
 
-#ifdef __linux
-	// Clears the screen for linux
-	void clear() {
-		system("clear");
-	}
-#elif _WIN32
-	// Clears the screen for windows
-	void clear() {
-		system("cls");
-	}
-#endif
+// Gets keyboard input
+int get_input() {
+	struct termios oldattr, newattr;
+	tcgetattr(STDIN_FILENO, &oldattr);
+	newattr = oldattr;
+	newattr.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
+	char input = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+	return input;
+}
+
+// Clears the screen
+void clear() {
+	system("clear");
+}
 
 // Prints the ASCII art
 void print_art() {
 	printf(CLI_BOLD_YELLOW);
+	printf("\n");
 	printf("\t\t████████╗██╗░░░██╗██████╗░██╗███╗░░██╗░██████╗░\n");
 	printf("\t\t╚══██╔══╝╚██╗░██╔╝██╔══██╗██║████╗░██║██╔════╝░\n");
 	printf("\t\t░░░██║░░░░╚████╔╝░██████╔╝██║██╔██╗██║██║░░██╗░\n");
@@ -52,8 +60,8 @@ void intro() {
 	printf(CLI_BOLD_CYAN CLI_UNDERLINE "How it works:\n");
 	printf(CLI_RESET CLI_BOLD);
 	printf("TODO\n\n");
-	printf("Press enter to start...\n> ");
-	getchar();
+	printf("Press any key to start...\n> ");
+	get_input();
 	printf(CLI_RESET);
 }
 
@@ -119,6 +127,11 @@ int main() {
 	//char *text = get_text();
 	//printf("%s", text);
 	//free(text);
+
+	//char input = get_input();
+	//if (input == 'A') {
+		//stuff
+	//}
 
 	intro();
 
