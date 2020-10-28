@@ -7,14 +7,14 @@
 #include <time.h>
 #include <termios.h>
 
-#define NUMER_OF_TEXTS 3
+#define NUMBER_OF_TEXTS 3
 
 #define CLI_RESET "\033[0m"
 #define CLI_BOLD "\033[1m"
 #define CLI_UNDERLINE "\033[4m"
 #define CLI_BOLD_YELLOW "\033[1;33m"
 #define CLI_BOLD_CYAN "\033[1;36m"
-#define CLI_RED "\033[0;31m"
+#define CLI_BOLD_RED "\033[1;31m"
 #define CLI_BOLD_GREEN "\033[1;32m"
 
 // Gets keyboard input
@@ -34,8 +34,8 @@ void clear() {
 	system("clear");
 }
 
-// Prints the ASCII art
-void print_art() {
+// Prints the introduction ASCII art
+void print_intro_art() {
 	printf(CLI_BOLD_YELLOW);
 	printf("\n");
 	printf("\t\t████████╗██╗░░░██╗██████╗░██╗███╗░░██╗░██████╗░\n");
@@ -44,19 +44,19 @@ void print_art() {
 	printf("\t\t░░░██║░░░░░╚██╔╝░░██╔═══╝░██║██║╚████║██║░░╚██╗\n");
 	printf("\t\t░░░██║░░░░░░██║░░░██║░░░░░██║██║░╚███║╚██████╔╝\n");
 	printf("\t\t░░░╚═╝░░░░░░╚═╝░░░╚═╝░░░░░╚═╝╚═╝░░╚══╝░╚═════╝░\n");
-	printf("  ░██████╗██████╗░███████╗███████╗██████╗░ ████████╗███████╗░██████╗████████╗\n");
-	printf("  ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗ ╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝\n");
-	printf("  ╚█████╗░██████╔╝█████╗░░█████╗░░██║░░██║ ░░░██║░░░█████╗░░╚█████╗░░░░██║░░░\n");
-	printf("  ░╚═══██╗██╔═══╝░██╔══╝░░██╔══╝░░██║░░██║ ░░░██║░░░██╔══╝░░░╚═══██╗░░░██║░░░\n");
-	printf("  ██████╔╝██║░░░░░███████╗███████╗██████╔╝ ░░░██║░░░███████╗██████╔╝░░░██║░░░\n");
-	printf("  ╚═════╝░╚═╝░░░░░╚══════╝╚══════╝╚═════╝░ ░░░╚═╝░░░╚══════╝╚═════╝░░░░╚═╝░░░\n\n");
+	printf("  ░██████╗██████╗░███████╗███████╗██████╗░  ████████╗███████╗░██████╗████████╗\n");
+	printf("  ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗  ╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝\n");
+	printf("  ╚█████╗░██████╔╝█████╗░░█████╗░░██║░░██║  ░░░██║░░░█████╗░░╚█████╗░░░░██║░░░\n");
+	printf("  ░╚═══██╗██╔═══╝░██╔══╝░░██╔══╝░░██║░░██║  ░░░██║░░░██╔══╝░░░╚═══██╗░░░██║░░░\n");
+	printf("  ██████╔╝██║░░░░░███████╗███████╗██████╔╝  ░░░██║░░░███████╗██████╔╝░░░██║░░░\n");
+	printf("  ╚═════╝░╚═╝░░░░░╚══════╝╚══════╝╚═════╝░  ░░░╚═╝░░░╚══════╝╚═════╝░░░░╚═╝░░░\n\n");
 	printf(CLI_RESET);
 }
 
 // Introduction
 void intro() {
 	clear();
-	print_art();
+	print_intro_art();
 	printf(CLI_BOLD_CYAN CLI_UNDERLINE "How it works:\n");
 	printf(CLI_RESET CLI_BOLD);
 	printf("TODO\n\n");
@@ -74,7 +74,7 @@ char *get_text() {
 	srand((unsigned) time(&t));
 
 	// Get a random line number
-	int random_line_number = rand() % NUMER_OF_TEXTS;
+	int random_line_number = rand() % NUMBER_OF_TEXTS;
 
 	// Open the file
 	FILE *file = fopen("texts.txt", "r");
@@ -116,6 +116,47 @@ char *get_text() {
 	fclose(file);
 }
 
+// Initializes the input text
+char *get_input_text(int text_len) {
+	// Allocate space as big as the text
+	char *input_text = malloc(sizeof(text_len));
+
+	// For each character in the input text
+	for (int i = 0, len = text_len; i < len; i++) {
+		// Set it to null
+		input_text[i] = 0;
+	}
+
+	// Return the pointer to the newly allocated input text
+	return input_text;
+}
+
+// Prints the color of the text according to the input
+void print_text(char *text, char *input_text, int text_len) {
+	// Loop over each character in the text
+	for (int i = 0; i < text_len; i++) {
+		// If the inputted character is empty
+		if (input_text[i] == 0) {
+			// Print the character in bold
+			printf(CLI_BOLD "%c", text[i]);
+		}
+		// Else if the inputted character is the same as the text character
+		else if (input_text[i] == text[i]) {
+			// Print the character in bold green
+			printf(CLI_BOLD_GREEN "%c", text[i]);
+		}
+		// Else if the inputted character is not the same as the text character
+		else if (input_text[i] != text[i]) {
+			// Print the character in bold red
+			printf(CLI_BOLD_RED "%c", text[i]);
+		}
+		// Clear the colors and fonts
+		printf(CLI_RESET);
+	}
+	// Print a new line after the loop ends
+	printf("\n");
+}
+
 int main() {
 	//char string[10];
 	//fgets(string, 10, stdin);
@@ -124,16 +165,21 @@ int main() {
 	//time_t end = time(NULL);
 	//printf("Time taken: %li", (end - start));
 
-	//char *text = get_text();
-	//printf("%s", text);
-	//free(text);
-
 	//char input = get_input();
 	//if (input == 'A') {
 		//stuff
 	//}
 
 	intro();
+
+	char *text = get_text();
+	int text_len = strlen(text);
+	char *input_text = get_input_text(text_len);
+
+	print_text(text, input_text, text_len);
+
+	free(text);
+	free(input_text);
 
 	return 0;
 }
