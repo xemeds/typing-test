@@ -139,6 +139,7 @@ char *get_input_text(int text_len) {
 
 // Prints the color of the text according to the input
 void print_text(char *text, char *input_text, int text_len) {
+	clear();
 	printf(CLI_BOLD_YELLOW);
 	printf("\n\n\n\n\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n\n");
 	printf(CLI_RESET);
@@ -152,13 +153,29 @@ void print_text(char *text, char *input_text, int text_len) {
 		}
 		// Else if the inputted character is the same as the text character
 		else if (input_text[i] == text[i]) {
-			// Print the character in bold green
-			printf(CLI_BOLD_GREEN "%c", text[i]);
+			// If the character is a space
+			if (text[i] == ' ') {
+				// Print a underscore in bold green
+				printf(CLI_BOLD_GREEN "_");
+			}
+			// Else
+			else {
+				// Print the character in bold green
+				printf(CLI_BOLD_GREEN "%c", text[i]);
+			}
 		}
 		// Else if the inputted character is not the same as the text character
 		else if (input_text[i] != text[i]) {
-			// Print the character in bold red
-			printf(CLI_BOLD_RED "%c", text[i]);
+			// If the character is a space
+			if (text[i] == ' ') {
+				// Print a underscore in bold red
+				printf(CLI_BOLD_RED "_");
+			}
+			// Else
+			else {
+				// Print the character in bold red
+				printf(CLI_BOLD_RED "%c", text[i]);
+			}
 		}
 		// Clear the colors and fonts
 		printf(CLI_RESET);
@@ -169,6 +186,47 @@ void print_text(char *text, char *input_text, int text_len) {
 	printf(CLI_BOLD_YELLOW);
 	printf("\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n\n");
 	printf(CLI_RESET);
+
+	// Print some space for the input to be in the middle
+	printf("\t\t\t\t     ");
+}
+
+// Finds the index of the first empty character in the input text
+int find_last_index(char *input_text, int text_len) {
+	// For each character in the input text
+	for (int i = 0; i < text_len; i++) {
+		// If the character is empty
+		if (input_text[i] == 0) {
+			// Return the index
+			return i;
+		}
+	}
+}
+
+// Adds the inputted character to the input text accordingly
+void add_input(char *text, char *input_text, int text_len, char input) {
+	// Get the index of the first empty character in the input text
+	int last_index = find_last_index(input_text, text_len);
+
+	// If the input is a backspace and not the first input
+	if (input == 127 && last_index != 0) {
+		// Set the character before the first empty cell in the input text to empty (delete the previous input)
+		input_text[last_index - 1] = 0;
+	}
+
+	// Else if the last character of the input text is empty and not a backspace
+	else if (input_text[text_len - 1] == 0 && input != 127) {
+		// Set the input as the first empty character in the input text (append the input)
+		input_text[last_index] =  input;
+	}
+}
+
+// Frees the texts
+void free_texts(char *text, char *input_text) {
+	// Free the text
+	free(text);
+	// Free the input text
+	free(input_text);
 }
 
 int main() {
@@ -194,13 +252,35 @@ int main() {
 	// Get the input text
 	char *input_text = get_input_text(text_len);
 
-	clear();
-	print_text(text, input_text, text_len);
+	// Initialize the input character
+	char input;
 
-	// Free the text
-	free(text);
-	// Free the input text
-	free(input_text);
+	// Typing loop
+	while (1) {
+		// Print the text
+		print_text(text, input_text, text_len);
+
+		// Get the input
+		input = get_input();
+
+		// If the input is the escape key
+		if (input == 27) {
+			// Print a new line
+			printf("\n");
+
+			// Free the texts
+			free_texts(text, input_text);
+
+			// Exit the program
+			return 0;
+		}
+
+		// Add the input
+		add_input(text, input_text, text_len, input);
+	}
+
+	// Free the texts
+	free_texts(text, input_text);
 
 	return 0;
 }
