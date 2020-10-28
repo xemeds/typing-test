@@ -102,6 +102,12 @@ char *get_text() {
 	        	// Close the file
 	        	fclose(file);
 
+	        	// If the text is not the last text
+	        	if (random_line_number != NUMBER_OF_TEXTS - 1) {
+	        		// Carry the end of the string to the last character of the text
+	        		text[strlen(text) - 1] = '\0';
+	        	}
+
 	        	// Return the pointer to the newly allocated text
 	        	return text;
 	        }
@@ -133,6 +139,10 @@ char *get_input_text(int text_len) {
 
 // Prints the color of the text according to the input
 void print_text(char *text, char *input_text, int text_len) {
+	printf(CLI_BOLD_YELLOW);
+	printf("\n\n\n\n\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n\n");
+	printf(CLI_RESET);
+
 	// Loop over each character in the text
 	for (int i = 0; i < text_len; i++) {
 		// If the inputted character is empty
@@ -155,6 +165,10 @@ void print_text(char *text, char *input_text, int text_len) {
 	}
 	// Print a new line after the loop ends
 	printf("\n");
+
+	printf(CLI_BOLD_YELLOW);
+	printf("\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n\n");
+	printf(CLI_RESET);
 }
 
 int main() {
@@ -170,15 +184,22 @@ int main() {
 		//stuff
 	//}
 
+	// Introduction
 	intro();
 
+	// Get a random text
 	char *text = get_text();
+	// Get the length of the text
 	int text_len = strlen(text);
+	// Get the input text
 	char *input_text = get_input_text(text_len);
 
+	clear();
 	print_text(text, input_text, text_len);
 
+	// Free the text
 	free(text);
+	// Free the input text
 	free(input_text);
 
 	return 0;
