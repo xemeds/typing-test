@@ -92,21 +92,26 @@ char *get_text() {
 	    {
 	    	// If the current line number is the random line number
 	        if (line_number == random_line_number) {
+	        	// Get the length of the line
+	        	int text_len = strlen(line);
+
+	        	// If the text is not the last text
+	        	if (random_line_number != NUMBER_OF_TEXTS - 1) {
+	        		// Carry the end of the string to the last character of the line (get rid of \n)
+	        		line[text_len - 1] = '\0';
+
+	        		// Decrease the length of the line
+	        		text_len--;
+	        	}
 
 	        	// Allocate space for a new text
-	        	char *text = malloc(sizeof(line));
+	        	char *text = malloc(text_len + 1);
 
 	        	// Copy the line to the text
 	        	strcpy(text, line);
 
 	        	// Close the file
 	        	fclose(file);
-
-	        	// If the text is not the last text
-	        	if (random_line_number != NUMBER_OF_TEXTS - 1) {
-	        		// Carry the end of the string to the last character of the text
-	        		text[strlen(text) - 1] = '\0';
-	        	}
 
 	        	// Return the pointer to the newly allocated text
 	        	return text;
@@ -124,14 +129,17 @@ char *get_text() {
 
 // Initializes the input text
 char *get_input_text(int text_len) {
-	// Allocate space as big as the text
-	char *input_text = malloc(sizeof(text_len));
+	// Allocate space for a new text
+	char *input_text = malloc(text_len + 1);
 
 	// For each character in the input text
-	for (int i = 0, len = text_len; i < len; i++) {
+	for (int i = 0; i < text_len; i++) {
 		// Set it to null
 		input_text[i] = 0;
 	}
+
+	// Set the last character as the null terminator
+	input_text[text_len] = '\0';
 
 	// Return the pointer to the newly allocated input text
 	return input_text;
@@ -221,6 +229,12 @@ void add_input(char *text, char *input_text, int text_len, char input) {
 	}
 }
 
+// Checks if the user has finished typing the text
+int check(char *text, char *input_text) {
+	return strcmp(text, input_text);
+}
+
+
 // Frees the texts
 void free_texts(char *text, char *input_text) {
 	// Free the text
@@ -230,25 +244,19 @@ void free_texts(char *text, char *input_text) {
 }
 
 int main() {
-	//char string[10];
-	//fgets(string, 10, stdin);
-
 	//time_t start = time(NULL);
 	//time_t end = time(NULL);
 	//printf("Time taken: %li", (end - start));
-
-	//char input = get_input();
-	//if (input == 'A') {
-		//stuff
-	//}
 
 	// Introduction
 	intro();
 
 	// Get a random text
 	char *text = get_text();
+
 	// Get the length of the text
 	int text_len = strlen(text);
+
 	// Get the input text
 	char *input_text = get_input_text(text_len);
 
@@ -259,6 +267,17 @@ int main() {
 	while (1) {
 		// Print the text
 		print_text(text, input_text, text_len);
+
+		printf("DONE: %i\n", check(text, input_text));
+
+		// If the input is finish
+		if (check(text, input_text) == 0) {
+			// Free the texts
+			free_texts(text, input_text);
+
+			// Exit the program
+			return 0;
+		}
 
 		// Get the input
 		input = get_input();
