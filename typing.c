@@ -234,6 +234,51 @@ int check(char *text, char *input_text) {
 	return strcmp(text, input_text);
 }
 
+// Calculates the number of words in the text
+int cal_words(char *text, int text_len) {
+	// Initialize the word count
+	int word_count = 0;
+
+	// Loop over each character 
+	for (int i = 0; i < text_len; i++) {
+		// If the character is a space
+		if (text[i] == ' ') {
+			// Increment the word count
+			word_count++;
+		}
+	}
+
+	// Increment the word count by one and return it
+	return word_count + 1;
+}
+
+// Calculates the speed
+float cal_speed(char *text, int text_len, time_t start_time, time_t end_time) {
+	// Get the number of words in the text
+	int word_count = cal_words(text, text_len);
+
+	// Set the time taken in minutes
+	float time_taken = ((float)(end_time - start_time)) / 60;
+
+	// Return the speed
+	return word_count / time_taken;
+}
+
+// Prints the speed with color
+void print_speed(float speed) {
+	printf(CLI_BOLD_CYAN);
+	printf("\n\t\t\t      Speed: ");
+	printf(CLI_RESET CLI_BOLD);
+
+	// Print the speed up to two decimal places
+	printf("%.2f", speed);
+
+	printf(CLI_RESET);
+	printf(" WPM\n\n\n");
+
+	printf(CLI_RESET);
+}
+
 
 // Frees the texts
 void free_texts(char *text, char *input_text) {
@@ -244,10 +289,6 @@ void free_texts(char *text, char *input_text) {
 }
 
 int main() {
-	//time_t start = time(NULL);
-	//time_t end = time(NULL);
-	//printf("Time taken: %li", (end - start));
-
 	// Introduction
 	intro();
 
@@ -263,15 +304,25 @@ int main() {
 	// Initialize the input character
 	char input;
 
+	// Get the start time
+	time_t start_time = time(NULL);
+
 	// Typing loop
 	while (1) {
 		// Print the text
 		print_text(text, input_text, text_len);
 
-		printf("DONE: %i\n", check(text, input_text));
-
 		// If the input is finish
 		if (check(text, input_text) == 0) {
+			// Get the end time
+			time_t end_time = time(NULL);
+
+			// Calculate the speed
+			float speed = cal_speed(text, text_len, start_time, end_time);
+
+			// Print the speed
+			print_speed(speed);
+
 			// Free the texts
 			free_texts(text, input_text);
 
