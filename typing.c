@@ -145,11 +145,56 @@ char *get_input_text(int text_len) {
 	return input_text;
 }
 
+// Finds the index of the first empty character in the input text
+int find_last_index(char *input_text, int text_len) {
+	// For each character in the input text
+	for (int i = 0; i < text_len; i++) {
+		// If the character is empty
+		if (input_text[i] == 0) {
+			// Return the index
+			return i;
+		}
+	}
+}
+
+// Returns if the user has typed correctly untill the last empty charracter
+int typing_correct(char *text, char *input_text, int text_len) {
+	// Get the index of the first empty character in the input text
+	int last_index = find_last_index(input_text, text_len);
+
+	// Loop over each character in the text until the last empty character
+	for (int i = 0; i < last_index; i++) {
+		// If the character in the text is not the same as the input text
+		if (text[i] != input_text[i]) {
+			// Returns 0
+			return 0;
+		}
+	}
+
+	// After the loop ends if they were all the same return 1
+	return 1;
+}
+
 // Prints the color of the text according to the input
 void print_text(char *text, char *input_text, int text_len) {
 	clear();
+
+	// If the user is typing correctly
+	if (typing_correct(text, input_text, text_len) == 1) {
+		// Change the color to bold green
+		printf(CLI_BOLD_GREEN);
+	}
+	// Else if the user is not typing correctly
+	else {
+		// Change the color to bold red
+		printf(CLI_BOLD_RED);
+	}
+
+	// Print the blinker
+	printf("\n\n\n\n\t\t\t\t     ■\n");
+
 	printf(CLI_BOLD_YELLOW);
-	printf("\n\n\n\n\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n\n");
+	printf("\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n\n");
 	printf(CLI_RESET);
 
 	// Loop over each character in the text
@@ -192,23 +237,11 @@ void print_text(char *text, char *input_text, int text_len) {
 	printf("\n");
 
 	printf(CLI_BOLD_YELLOW);
-	printf("\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n\n");
+	printf("\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n");
 	printf(CLI_RESET);
 
 	// Print some space for the input to be in the middle
 	printf("\t\t\t\t     ");
-}
-
-// Finds the index of the first empty character in the input text
-int find_last_index(char *input_text, int text_len) {
-	// For each character in the input text
-	for (int i = 0; i < text_len; i++) {
-		// If the character is empty
-		if (input_text[i] == 0) {
-			// Return the index
-			return i;
-		}
-	}
 }
 
 // Adds the inputted character to the input text accordingly
