@@ -60,7 +60,7 @@ void intro() {
 	printf(CLI_BOLD_CYAN CLI_UNDERLINE "How it works:\n");
 	printf(CLI_RESET CLI_BOLD);
 	printf("TODO\n\n");
-	printf("Press any key to start...\n> ");
+	printf("Press any key to continue...\n> ");
 	get_input();
 	printf(CLI_RESET);
 }
@@ -237,7 +237,7 @@ void print_text(char *text, char *input_text, int text_len) {
 	printf("\n");
 
 	printf(CLI_BOLD_YELLOW);
-	printf("\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n");
+	printf("\n\t\t  ==+==+==+==+==+==+==+==+==+==+==+==+==+==\n\n");
 	printf(CLI_RESET);
 
 	// Print some space for the input to be in the middle
@@ -337,8 +337,8 @@ int main() {
 	// Initialize the input character
 	char input;
 
-	// Get the start time
-	time_t start_time = time(NULL);
+	// Initialize the start time
+	time_t start_time = 0;
 
 	// Typing loop
 	while (1) {
@@ -365,6 +365,12 @@ int main() {
 
 		// Get the input
 		input = get_input();
+
+		// If the start time is 0
+		if (start_time == 0) {
+			// Get the start time
+			start_time = time(NULL);
+		}
 
 		// If the input is the escape key
 		if (input == 27) {
