@@ -57,9 +57,9 @@ void print_intro_art() {
 void intro() {
 	clear();
 	print_intro_art();
-	printf(CLI_BOLD_CYAN CLI_UNDERLINE "How it works:\n");
+	printf(CLI_BOLD_CYAN CLI_UNDERLINE "Description:\n");
 	printf(CLI_RESET CLI_BOLD);
-	printf("TODO\n\n");
+	printf("You will be presented with a text, which you will try and type as fast as you can. The timer will start after your first input and when you are done typing the text, your typing speed will be calculated.\n\n");
 	printf("Press any key to continue...\n> ");
 	get_input();
 	printf(CLI_RESET);
@@ -76,10 +76,10 @@ char *get_text() {
 	// Get a random line number
 	int random_line_number = rand() % NUMBER_OF_TEXTS;
 
-	// Open the file
+	// Open the texts file
 	FILE *file = fopen("texts.txt", "r");
 
-	// Check if the file pointer is empty
+	// Check if the file pointer to the file is empty
 	if (file != NULL) {
 		// Create the max read size per line
 		char line[256];
@@ -104,7 +104,7 @@ char *get_text() {
 	        		text_len--;
 	        	}
 
-	        	// Allocate space for a new text
+	        	// Allocate space for the text
 	        	char *text = malloc(text_len + 1);
 
 	        	// Copy the line to the text
@@ -116,7 +116,7 @@ char *get_text() {
 	        	// Return the pointer to the newly allocated text
 	        	return text;
 	        }
-	        // Else
+	        // Else if the current line number is not the random line number
 	        else {
 	        	// Increment the line number
 	        	line_number++;
@@ -129,7 +129,7 @@ char *get_text() {
 
 // Initializes the input text
 char *get_input_text(int text_len) {
-	// Allocate space for a new text
+	// Allocate space for the input text
 	char *input_text = malloc(text_len + 1);
 
 	// For each character in the input text
@@ -157,7 +157,7 @@ int find_last_index(char *input_text, int text_len) {
 	}
 }
 
-// Returns if the user has typed correctly untill the last empty charracter
+// Checks if the user has typed correctly untill the last empty charracter
 int typing_correct(char *text, char *input_text, int text_len) {
 	// Get the index of the first empty character in the input text
 	int last_index = find_last_index(input_text, text_len);
@@ -166,12 +166,12 @@ int typing_correct(char *text, char *input_text, int text_len) {
 	for (int i = 0; i < last_index; i++) {
 		// If the character in the text is not the same as the input text
 		if (text[i] != input_text[i]) {
-			// Returns 0
+			// Returns 0 (false)
 			return 0;
 		}
 	}
 
-	// After the loop ends if they were all the same return 1
+	// After the loop ends if they were all the same return 1 (true)
 	return 1;
 }
 
@@ -251,11 +251,11 @@ void add_input(char *text, char *input_text, int text_len, char input) {
 
 	// If the input is a backspace and not the first input
 	if (input == 127 && last_index != 0) {
-		// Set the character before the first empty cell in the input text to empty (delete the previous input)
+		// Set the character before the first empty cell in the input text to null (delete the previous input)
 		input_text[last_index - 1] = 0;
 	}
 
-	// Else if the last character of the input text is empty and not a backspace
+	// Else if the last character of the input text is empty (the input text is not full) and the input is not a backspace
 	else if (input_text[text_len - 1] == 0 && input != 127) {
 		// Set the input as the first empty character in the input text (append the input)
 		input_text[last_index] =  input;
@@ -366,7 +366,7 @@ int main() {
 		// Get the input
 		input = get_input();
 
-		// If the start time is 0
+		// If the start time is 0 (not taken)
 		if (start_time == 0) {
 			// Get the start time
 			start_time = time(NULL);
