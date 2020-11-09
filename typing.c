@@ -300,18 +300,42 @@ float cal_speed(char *text, int text_len, time_t start_time, time_t end_time) {
 // Prints the speed with color
 void print_speed(float speed) {
 	printf(CLI_BOLD_CYAN);
-	printf("\n\t\t\t      Speed: ");
+	printf("\n\t\t\t       Speed: ");
 	printf(CLI_RESET CLI_BOLD);
 
 	// Print the speed up to two decimal places
 	printf("%.2f", speed);
 
 	printf(CLI_RESET);
-	printf(" WPM\n\n\n");
+	printf(" WPM\n\n");
 
 	printf(CLI_RESET);
 }
 
+// Checks if the user wants to play again
+int play_again() {
+	printf(CLI_BOLD);
+	printf("\t\t\t\t  R - Reset\n");
+	printf("\t\t\t\t  Q - Quit\n\n");
+	printf("\t\t\t\t     ");
+
+	// Loop until a valid input is given
+	while (1) {
+		// Get the input
+		char input = get_input();
+
+		// If the input is the letter R
+		if (input == 'R' || input == 'r') {
+			// Return 1 (true)
+			return 1;
+		}
+		// Else if the input is the letter Q
+		else if (input == 'Q' || input == 'q') {
+			// Return 0 (false)
+			return 0;
+		}
+	}
+}
 
 // Frees the texts
 void free_texts(char *text, char *input_text) {
@@ -340,7 +364,7 @@ int main() {
 	// Initialize the start time
 	time_t start_time = 0;
 
-	// Typing loop
+	// Main loop
 	while (1) {
 		// Print the text
 		print_text(text, input_text, text_len);
@@ -356,11 +380,28 @@ int main() {
 			// Print the speed
 			print_speed(speed);
 
-			// Free the texts
-			free_texts(text, input_text);
+			// If the user wants to play again
+			if (play_again()) {
+				// Get a new random text
+				text = get_text();
 
-			// Exit the program
-			return 0;
+				// Get the length of the new text
+				text_len = strlen(text);
+
+				// Get the input text for the new text
+				input_text = get_input_text(text_len);
+
+				// Reset the start time
+				start_time = 0;
+
+				// Start the loop from the start
+				continue;
+			}
+			// Else if the user does not want to play again
+			else {
+				// Break the typing loop
+				break;
+			}
 		}
 
 		// Get the input
@@ -374,19 +415,17 @@ int main() {
 
 		// If the input is the escape key
 		if (input == 27) {
-			// Print a new line
-			printf("\n");
 
-			// Free the texts
-			free_texts(text, input_text);
-
-			// Exit the program
-			return 0;
+			// Break the typing loop
+			break;
 		}
 
 		// Add the input
 		add_input(text, input_text, text_len, input);
 	}
+
+	// Print a new line
+	printf("\n");
 
 	// Free the texts
 	free_texts(text, input_text);
