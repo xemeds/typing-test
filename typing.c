@@ -7,7 +7,7 @@
 #include <time.h>
 #include <termios.h>
 
-#define NUMBER_OF_TEXTS 3
+#define NUMBER_OF_TEXTS 20
 
 #define CLI_RESET "\033[0m"
 #define CLI_BOLD "\033[1m"
