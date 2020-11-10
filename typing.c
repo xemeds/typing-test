@@ -59,7 +59,7 @@ void intro() {
 	print_intro_art();
 	printf(CLI_BOLD_CYAN CLI_UNDERLINE "Description:\n");
 	printf(CLI_RESET CLI_BOLD);
-	printf("You will be presented with a text, which you will try and type as fast as you can. The timer will start after your first input and when you are done typing the text, your typing speed will be calculated.\n\n");
+	printf("You will be presented with a text, which you will try and type as fast as you can. The timer will start after your first input and after you have typed the text correctly, your typing speed will be calculated.\n\n");
 	printf("Press any key to continue...\n> ");
 	get_input();
 	printf(CLI_RESET);
