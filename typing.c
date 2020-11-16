@@ -146,22 +146,10 @@ char *get_input_text(int text_len) {
 	return input_text;
 }
 
-// Finds the index of the first empty character in the input text
-int find_last_index(char *input_text, int text_len) {
-	// For each character in the input text
-	for (int i = 0; i < text_len; i++) {
-		// If the character is empty
-		if (input_text[i] == 0) {
-			// Return the index
-			return i;
-		}
-	}
-}
-
 // Checks if the user has typed correctly untill the last empty charracter
 int typing_correct(char *text, char *input_text, int text_len) {
 	// Get the index of the first empty character in the input text
-	int last_index = find_last_index(input_text, text_len);
+	int last_index = strlen(input_text);
 
 	// Loop over each character in the text until the last empty character
 	for (int i = 0; i < last_index; i++) {
@@ -248,7 +236,7 @@ void print_text(char *text, char *input_text, int text_len) {
 // Adds the inputted character to the input text accordingly
 void add_input(char *text, char *input_text, int text_len, char input) {
 	// Get the index of the first empty character in the input text
-	int last_index = find_last_index(input_text, text_len);
+	int last_index = strlen(input_text);
 
 	// If the input is a backspace and not the first input
 	if (input == 127 && last_index != 0) {
