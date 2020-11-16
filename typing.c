@@ -8,6 +8,7 @@
 #include <termios.h>
 
 #define NUMBER_OF_TEXTS 20
+#define ERROR_TEXT "Couldn't find the 'texts.txt' file. So this is the text that shows up."
 
 #define CLI_RESET "\033[0m"
 #define CLI_BOLD "\033[1m"
@@ -79,52 +80,61 @@ char *get_text() {
 	// Open the texts file
 	FILE *file = fopen("texts.txt", "r");
 
-	// Check if the file pointer to the file is empty
+	// If the file pointer is not empty
 	if (file != NULL) {
 		// Create the max read size per line
 		char line[256];
 
-	    // Declare the line number of the file
-	    int line_number = 0;
+		// Declare the line number of the file
+		int line_number = 0;
 
-	    // Read each line one by one
-	    while (fgets(line, sizeof line, file) != NULL)
-	    {
-	    	// If the current line number is the random line number
-	        if (line_number == random_line_number) {
-	        	// Get the length of the line
-	        	int text_len = strlen(line);
+		// Read each line one by one
+		while (fgets(line, sizeof line, file) != NULL)
+		{
+			// If the current line number is the random line number
+			if (line_number == random_line_number) {
+				// Get the length of the line
+				int text_len = strlen(line);
 
-	        	// If the text is not the last text
-	        	if (random_line_number != NUMBER_OF_TEXTS - 1) {
-	        		// Carry the end of the string to the last character of the line (get rid of \n)
-	        		line[text_len - 1] = '\0';
+				// If the text is not the last text
+				if (random_line_number != NUMBER_OF_TEXTS - 1) {
+					// Carry the end of the string to the last character of the line (get rid of \n)
+					line[text_len - 1] = '\0';
 
-	        		// Decrease the length of the line
-	        		text_len--;
-	        	}
+					// Decrease the length of the line
+					text_len--;
+				}
 
-	        	// Allocate space for the text
-	        	char *text = malloc(text_len + 1);
+				// Allocate space for the text
+				char *text = malloc(text_len + 1);
 
-	        	// Copy the line to the text
-	        	strcpy(text, line);
+				// Copy the line to the text
+				strcpy(text, line);
 
-	        	// Close the file
-	        	fclose(file);
+				// Close the file
+				fclose(file);
 
-	        	// Return the pointer to the newly allocated text
-	        	return text;
-	        }
-	        // Else if the current line number is not the random line number
-	        else {
-	        	// Increment the line number
-	        	line_number++;
-	        }
-	    }
+				// Return the pointer to the newly allocated text
+				return text;
+			}
+			// Else if the current line number is not the random line number
+			else {
+				// Increment the line number
+				line_number++;
+			}
+		}
 	}
-	// Just in case close the file
-	fclose(file);
+	// Else if the file pointer is empty
+	else {
+		// Allocate space for the error text
+		char *text = malloc(strlen(ERROR_TEXT) + 1);
+
+		// Copy the error text to the allocated space
+		strcpy(text, ERROR_TEXT);
+
+		// Return the pointer to the error text
+		return text;
+	}
 }
 
 // Initializes the input text
