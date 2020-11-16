@@ -139,17 +139,8 @@ char *get_text() {
 
 // Initializes the input text
 char *get_input_text(int text_len) {
-	// Allocate space for the input text
-	char *input_text = malloc(text_len + 1);
-
-	// For each character in the input text
-	for (int i = 0; i < text_len; i++) {
-		// Set it to null
-		input_text[i] = 0;
-	}
-
-	// Set the last character as the null terminator
-	input_text[text_len] = '\0';
+	// Allocate space for the input text while also setting each character to null
+	char *input_text = calloc(text_len + 1, 1);
 
 	// Return the pointer to the newly allocated input text
 	return input_text;
